@@ -315,53 +315,60 @@ function App() {
       <div className={styles.container}>
         <Header />
 
-        <RecordButton
-          isRecording={isRecording}
-          isProcessing={isProcessing}
-          onStartRecording={startRecording}
-          onStopRecording={stopRecording}
-        />
-
-        <UploadZone
-          isProcessing={isProcessing}
-          isDragging={isDragging}
-          onFileSelect={handleFileSelect}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          fileInputRef={fileInputRef}
-        />
-
-        <TextInputZone
-          isProcessing={isProcessing}
-          onTextSubmit={handleTextSubmit}
-        />
-
-        <SettingsPanel
-          useLLM={useLLM}
-          systemPrompt={systemPrompt}
-          isLoadingPrompt={isLoadingPrompt}
-          onToggleLLM={setUseLLM}
-          onPromptChange={setSystemPrompt}
-        />
-
         {error && (
           <ErrorMessage message={error} onDismiss={() => setError(null)} />
         )}
 
-        <TranscriptionResults
-          rawText={rawText}
-          cleanedText={cleanedText}
-          useLLM={useLLM}
-          isCopied={isCopied}
-          isCleaningWithLLM={isCleaningWithLLM}
-          isProcessing={isProcessing}
-          isOriginalExpanded={isOriginalExpanded}
-          onCopy={copyToClipboard}
-          onToggleOriginalExpanded={() =>
-            setIsOriginalExpanded(!isOriginalExpanded)
-          }
-        />
+        <div className={styles.topSection}>
+          <div className={styles.leftPanel}>
+            <RecordButton
+              isRecording={isRecording}
+              isProcessing={isProcessing}
+              onStartRecording={startRecording}
+              onStopRecording={stopRecording}
+            />
+
+            <UploadZone
+              isProcessing={isProcessing}
+              isDragging={isDragging}
+              onFileSelect={handleFileSelect}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              fileInputRef={fileInputRef}
+            />
+
+            <TextInputZone
+              isProcessing={isProcessing}
+              onTextSubmit={handleTextSubmit}
+            />
+
+            <SettingsPanel
+              useLLM={useLLM}
+              systemPrompt={systemPrompt}
+              isLoadingPrompt={isLoadingPrompt}
+              onToggleLLM={setUseLLM}
+              onPromptChange={setSystemPrompt}
+            />
+          </div>
+
+          <div className={styles.rightPanel}>
+            <TranscriptionResults
+              rawText={rawText}
+              cleanedText={cleanedText}
+              useLLM={useLLM}
+              isCopied={isCopied}
+              isCleaningWithLLM={isCleaningWithLLM}
+              isProcessing={isProcessing}
+              isOriginalExpanded={isOriginalExpanded}
+              onCopy={copyToClipboard}
+              onToggleOriginalExpanded={() =>
+                setIsOriginalExpanded(!isOriginalExpanded)
+              }
+            />
+          </div>
+        </div>
+
         <Footer />
       </div>
     </div>
