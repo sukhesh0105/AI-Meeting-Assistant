@@ -5,6 +5,47 @@ import { TextBox } from './TextBox';
 import { Box } from './Box';
 import { ModelQualityWarning } from './ModelQualityWarning';
 
+function parseMeetingNotes(text: string) {
+  const sections = {
+    summary: '',
+    decisions: [] as string[],
+    actions: [] as string[],
+  };
+
+  let current = '';
+
+  text.split('\n').forEach((line) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith('# Meeting Summary')) {
+      current = 'summary';
+      return;
+    }
+
+    if (trimmed.startsWith('# Key Decisions')) {
+      current = 'decisions';
+      return;
+    }
+
+    if (trimmed.startsWith('# Action Items')) {
+      current = 'actions';
+      return;
+    }
+
+    if (!trimmed) return;
+
+    if (current === 'summary') {
+      sections.summary += trimmed + ' ';
+    } else if (current === 'decisions') {
+      sections.decisions.push(trimmed.replace(/^-\s*/, ''));
+    } else if (current === 'actions') {
+      sections.actions.push(trimmed.replace(/^-\s*/, ''));
+    }
+  });
+
+  return sections;
+}
+
 export function TranscriptionResults({
   rawText,
   cleanedText,
@@ -22,6 +63,7 @@ export function TranscriptionResults({
   }
 
   const displayText = useLLM && cleanedText ? cleanedText : rawText;
+  const meetingNotes = cleanedText ? parseMeetingNotes(cleanedText) : null;
 
   return (
     <div className={styles.container}>
@@ -41,20 +83,51 @@ export function TranscriptionResults({
         />
       </Box>
 
-      {/* Cleaned transcription (if LLM is enabled and cleaned text exists or is processing) */}
+      {/* AI Meeting Notes */}
       {useLLM && (cleanedText || isCleaningWithLLM) && (
-        <Box header="Cleaned Transcription" icon={Sparkles}>
+        <Box header="AI Meeting Notes" icon={Sparkles}>
           {cleanedText && <ModelQualityWarning />}
-          <TextBox
-            mode="display"
-            variant="default"
-            value={cleanedText || ''}
-            isLoading={isCleaningWithLLM}
-            showCopyButton={!!cleanedText}
-            isCopied={isCopied}
-            onCopy={() => cleanedText && onCopy(cleanedText)}
-            maxHeight="300px"
-          />
+
+          {isCleaningWithLLM ? (
+            <TextBox
+              mode="display"
+              variant="default"
+              value=""
+              isLoading={true}
+            />
+          ) : (
+            <div className={styles.meetingCards}>
+              <div className={styles.card}>
+                <h3>📝 Meeting Summary</h3>
+                <p>{meetingNotes?.summary}</p>
+              </div>
+
+              <div className={styles.card}>
+                <h3>✅ Key Decisions</h3>
+                <ul>
+                  {meetingNotes?.decisions.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.card}>
+                <h3>📌 Action Items</h3>
+                <ul>
+                  {meetingNotes?.actions.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <button
+                className={styles.copyButton}
+                onClick={() => cleanedText && onCopy(cleanedText)}
+              >
+                {isCopied ? '✓ Copied' : '📋 Copy Meeting Notes'}
+              </button>
+            </div>
+          )}
         </Box>
       )}
 
