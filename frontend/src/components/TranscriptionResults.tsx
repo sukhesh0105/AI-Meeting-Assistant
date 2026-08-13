@@ -3,7 +3,6 @@ import styles from './TranscriptionResults.module.css';
 import type { TranscriptionResultsProps } from '../types';
 import { TextBox } from './TextBox';
 import { Box } from './Box';
-import { ModelQualityWarning } from './ModelQualityWarning';
 
 function parseMeetingNotes(text: string) {
   const sections = {
@@ -86,7 +85,7 @@ export function TranscriptionResults({
       {/* AI Meeting Notes */}
       {useLLM && (cleanedText || isCleaningWithLLM) && (
         <Box header="AI Meeting Notes" icon={Sparkles}>
-          {cleanedText && <ModelQualityWarning />}
+          {cleanedText}
 
           {isCleaningWithLLM ? (
             <TextBox
