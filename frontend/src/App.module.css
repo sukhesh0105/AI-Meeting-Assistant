@@ -20,6 +20,19 @@
   align-items: start;
 }
 
+.singleColumn {
+  grid-template-columns: 1fr;
+}
+
+.singleColumn .leftPanel {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.singleColumn .rightPanel {
+  display: none;
+}
+
 .leftPanel {
   display: flex;
   flex-direction: column;

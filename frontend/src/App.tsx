@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './App.module.css';
 import { Header } from './components/Header';
+import { Box } from './components/Box';
 import { RecordButton } from './components/RecordButton';
 import { UploadZone } from './components/UploadZone';
 import { TextInputZone } from './components/TextInputZone';
@@ -310,6 +311,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRecording, isProcessing]);
 
+  const hasResults =
+    !!rawText || !!cleanedText || isProcessing || isCleaningWithLLM;
+
   return (
     <div className={styles.app}>
       <div className={styles.container}>
@@ -319,39 +323,53 @@ function App() {
           <ErrorMessage message={error} onDismiss={() => setError(null)} />
         )}
 
-        <div className={styles.topSection}>
+        <div
+          className={`${styles.topSection} ${
+            !hasResults ? styles.singleColumn : ''
+          }`}
+        >
+          {/* Left Panel */}
           <div className={styles.leftPanel}>
-            <RecordButton
-              isRecording={isRecording}
-              isProcessing={isProcessing}
-              onStartRecording={startRecording}
-              onStopRecording={stopRecording}
-            />
+            <Box>
+              <RecordButton
+                isRecording={isRecording}
+                isProcessing={isProcessing}
+                onStartRecording={startRecording}
+                onStopRecording={stopRecording}
+              />
+            </Box>
 
-            <UploadZone
-              isProcessing={isProcessing}
-              isDragging={isDragging}
-              onFileSelect={handleFileSelect}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              fileInputRef={fileInputRef}
-            />
+            <Box>
+              <UploadZone
+                isProcessing={isProcessing}
+                isDragging={isDragging}
+                onFileSelect={handleFileSelect}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                fileInputRef={fileInputRef}
+              />
+            </Box>
 
-            <TextInputZone
-              isProcessing={isProcessing}
-              onTextSubmit={handleTextSubmit}
-            />
+            <Box>
+              <TextInputZone
+                isProcessing={isProcessing}
+                onTextSubmit={handleTextSubmit}
+              />
+            </Box>
 
-            <SettingsPanel
-              useLLM={useLLM}
-              systemPrompt={systemPrompt}
-              isLoadingPrompt={isLoadingPrompt}
-              onToggleLLM={setUseLLM}
-              onPromptChange={setSystemPrompt}
-            />
+            <Box>
+              <SettingsPanel
+                useLLM={useLLM}
+                systemPrompt={systemPrompt}
+                isLoadingPrompt={isLoadingPrompt}
+                onToggleLLM={setUseLLM}
+                onPromptChange={setSystemPrompt}
+              />
+            </Box>
           </div>
 
+          {/* Right Panel */}
           <div className={styles.rightPanel}>
             <TranscriptionResults
               rawText={rawText}

@@ -1,6 +1,17 @@
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import styles from './Box.module.css';
-import type { BoxProps } from '../types';
+import type { ReactNode } from 'react';
+
+interface BoxProps {
+  children: ReactNode;
+  header?: string;
+  icon?: LucideIcon;
+  collapsible?: boolean;
+  isExpanded?: boolean;
+  onToggleExpanded?: () => void;
+  className?: string;
+  gap?: string;
+}
 
 export function Box({
   children,
@@ -10,39 +21,26 @@ export function Box({
   isExpanded = true,
   onToggleExpanded,
   className,
+  gap,
 }: BoxProps) {
   return (
     <div className={`${styles.box} ${className || ''}`}>
       {header && (
         <div className={styles.header}>
-          {collapsible ? (
-            <button
-              className={styles.collapsibleHeader}
-              onClick={onToggleExpanded}
-              aria-expanded={isExpanded}
-              aria-label={
-                isExpanded ? `Collapse ${header}` : `Expand ${header}`
-              }
-              type="button"
-            >
-              {Icon && <Icon className={styles.icon} />}
-              <h3 className={styles.title}>{header}</h3>
-              {isExpanded ? (
-                <ChevronUp className={styles.chevron} />
-              ) : (
-                <ChevronDown className={styles.chevron} />
-              )}
-            </button>
-          ) : (
-            <>
-              {Icon && <Icon className={styles.icon} />}
-              <h3 className={styles.title}>{header}</h3>
-            </>
+          {Icon && (
+            <div className={styles.icon}>
+              <Icon size={22} />
+            </div>
           )}
+
+          <h2 className={styles.title}>{header}</h2>
         </div>
       )}
+
       {(!collapsible || isExpanded) && (
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content} style={gap ? { gap } : undefined}>
+          {children}
+        </div>
       )}
     </div>
   );
