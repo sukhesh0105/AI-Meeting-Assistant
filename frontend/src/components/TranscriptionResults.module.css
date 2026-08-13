@@ -1,49 +1,84 @@
-.meetingCards {
+.container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 18px;
 }
 
 .card {
-  background: #eaf2ff;
-  border: 1px solid #c7dbff;
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summaryCard,
+.decisionCard,
+.actionCard {
+  border-radius: 14px;
   padding: 16px;
-  color: #1f2937;
+  margin-top: 14px;
+  border: 1px solid #dbeafe;
+  background: #f8fbff;
 }
 
-.card h3 {
-  margin: 0 0 12px;
-  color: #1e40af;
-  font-size: 18px;
+.summaryCard h3,
+.decisionCard h3,
+.actionCard h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: #1d4ed8;
 }
 
-.card p {
+.summaryCard p {
   margin: 0;
-  line-height: 1.6;
+  color: #334155;
+  line-height: 1.7;
 }
 
-.card ul {
+.decisionCard ul,
+.actionCard ul {
   margin: 0;
-  padding-left: 20px;
-}
-
-.card li {
-  margin-bottom: 8px;
+  padding-left: 18px;
+  color: #334155;
 }
 
 .copyButton {
-  align-self: flex-start;
-  background: #2563eb;
-  color: white;
+  margin-top: 18px;
+  width: 100%;
+  height: 48px;
   border: none;
-  border-radius: 10px;
-  padding: 10px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: white;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  transition: 0.2s;
 }
 
 .copyButton:hover {
-  background: #1d4ed8;
+  transform: translateY(-2px);
 }

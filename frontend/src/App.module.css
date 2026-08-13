@@ -1,21 +1,20 @@
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  padding: 40px 20px;
+  padding: 48px 28px;
 }
 
 .container {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .topSection {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 420px 1fr;
   gap: 24px;
   align-items: start;
 }
@@ -25,7 +24,7 @@
 }
 
 .singleColumn .leftPanel {
-  max-width: 700px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -33,16 +32,11 @@
   display: none;
 }
 
-.leftPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
+.leftPanel,
 .rightPanel {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .bottomSection {
@@ -51,12 +45,27 @@
   gap: 20px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .topSection {
     grid-template-columns: 1fr;
   }
 
+  .singleColumn .rightPanel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
   .app {
     padding: 20px 14px;
+  }
+
+  .container {
+    gap: 20px;
+  }
+
+  .leftPanel,
+  .rightPanel {
+    gap: 16px;
   }
 }
