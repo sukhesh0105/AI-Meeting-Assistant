@@ -1,8 +1,6 @@
-import { Sparkles, ChevronDown, ChevronUp, Settings } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import styles from './SettingsPanel.module.css';
 import type { SettingsPanelProps } from '../types';
-import { useState } from 'react';
-import { TextBox } from './TextBox';
 import { Box } from './Box';
 
 export function SettingsPanel({
@@ -12,67 +10,47 @@ export function SettingsPanel({
   onToggleLLM,
   onPromptChange,
 }: SettingsPanelProps) {
-  const [isPromptExpanded, setIsPromptExpanded] = useState(false);
-
   return (
-    <Box header="Settings" icon={Settings}>
-      {/* Main LLM Toggle - Always Visible */}
-      <div className={styles.toggleSection}>
-        <label className={styles.toggleLabel}>
-          <input
-            type="checkbox"
-            checked={useLLM}
-            onChange={(e) => onToggleLLM(e.target.checked)}
-            className={styles.checkbox}
-          />
-          <Sparkles className={styles.toggleIcon} />
-          <span className={styles.toggleText}>
-            Clean transcription with LLM
-          </span>
-        </label>
-        <p className={styles.description}>
-          Use AI to clean up transcription (remove filler words, fix grammar)
-        </p>
-      </div>
+    <Box header="AI Settings" icon={Bot}>
+      <div className={styles.container}>
+        {/* AI Toggle */}
+        <div className={styles.toggleRow}>
+          <div className={styles.toggleInfo}>
+            <h4>Enable AI Cleaning</h4>
+            <p>Generate summaries, decisions and action items</p>
+          </div>
 
-      {/* System Prompt - Collapsible Advanced Option */}
-      {useLLM && (
-        <div className={styles.promptSection}>
-          <button
-            className={styles.promptHeader}
-            onClick={() => setIsPromptExpanded(!isPromptExpanded)}
-            aria-expanded={isPromptExpanded}
-            aria-label={
-              isPromptExpanded
-                ? 'Collapse system prompt'
-                : 'Expand system prompt'
-            }
-            type="button"
-          >
-            <span className={styles.promptLabel}>System Prompt</span>
-            {isPromptExpanded ? (
-              <ChevronUp className={styles.chevron} />
-            ) : (
-              <ChevronDown className={styles.chevron} />
-            )}
-          </button>
-
-          {isPromptExpanded && (
-            <div className={styles.promptContent}>
-              <TextBox
-                mode="input"
-                variant="default"
-                value={systemPrompt}
-                onChange={onPromptChange}
-                placeholder="Enter system prompt for LLM..."
-                isLoading={isLoadingPrompt}
-                rows={6}
-                id="systemPrompt"
-              />
-            </div>
-          )}
+          <label className={styles.switch}>
+            <input
+              type="checkbox"
+              checked={useLLM}
+              onChange={(e) => onToggleLLM(e.target.checked)}
+            />
+            <span className={styles.slider}></span>
+          </label>
         </div>
-      )}
+
+        {/* Active Model */}
+        <div className={styles.modelCard}>
+          <div className={styles.modelTitle}>Active Local Model</div>
+          <div className={styles.modelName}>Gemma 3 · 4B</div>
+        </div>
+
+        {/* System Prompt */}
+        {useLLM && (
+          <div className={styles.promptSection}>
+            <label className={styles.promptLabel}>System Prompt</label>
+
+            <textarea
+              className={styles.promptBox}
+              value={systemPrompt}
+              onChange={(e) => onPromptChange(e.target.value)}
+              disabled={isLoadingPrompt}
+              placeholder="Enter the system prompt for the LLM..."
+            />
+          </div>
+        )}
+      </div>
     </Box>
   );
 }
