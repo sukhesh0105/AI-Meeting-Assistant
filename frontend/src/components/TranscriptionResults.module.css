@@ -82,3 +82,35 @@
 .copyButton:hover {
   transform: translateY(-2px);
 }
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pdfButton {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  background: #111827;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.pdfButton:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .pdfButton {
+    width: 100%;
+  }
+}

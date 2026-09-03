@@ -56,12 +56,49 @@ export function TranscriptionResults({
   onCopy,
   onToggleOriginalExpanded,
 }: TranscriptionResultsProps) {
+  const handleExportPDF = async () => {
+    if (!cleanedText) return;
+
+    try {
+      const response = await fetch('http://localhost:8000/api/export-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: cleanedText,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = 'meeting_notes.pdf';
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+    }
+  };
+
   // Show component if either processing or rawText exists
   if (!isProcessing && !rawText) {
     return null;
   }
 
   const displayText = useLLM && cleanedText ? cleanedText : rawText;
+
   const meetingNotes = cleanedText ? parseMeetingNotes(cleanedText) : null;
 
   return (
@@ -85,8 +122,6 @@ export function TranscriptionResults({
       {/* AI Meeting Notes */}
       {useLLM && (cleanedText || isCleaningWithLLM) && (
         <Box header="AI Meeting Notes" icon={Sparkles}>
-          {cleanedText}
-
           {isCleaningWithLLM ? (
             <TextBox
               mode="display"
@@ -119,12 +154,18 @@ export function TranscriptionResults({
                 </ul>
               </div>
 
-              <button
-                className={styles.copyButton}
-                onClick={() => cleanedText && onCopy(cleanedText)}
-              >
-                {isCopied ? '✓ Copied' : '📋 Copy Meeting Notes'}
-              </button>
+              <div className={styles.actionButtons}>
+                <button
+                  className={styles.copyButton}
+                  onClick={() => cleanedText && onCopy(cleanedText)}
+                >
+                  {isCopied ? 'Copied!' : 'Copy Meeting Notes'}
+                </button>
+
+                <button className={styles.pdfButton} onClick={handleExportPDF}>
+                  Export PDF
+                </button>
+              </div>
             </div>
           )}
         </Box>
