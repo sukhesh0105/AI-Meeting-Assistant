@@ -12,7 +12,13 @@ from reportlab.platypus import (
 )
 
 
-def generate_meeting_pdf(text: str) -> bytes:
+def generate_meeting_pdf(
+    text: str,
+    title: str = "",
+    date: str = "",
+    participants: str = "",
+    project: str = "",
+) -> bytes:
     buffer = BytesIO()
 
     doc = SimpleDocTemplate(
@@ -79,12 +85,51 @@ def generate_meeting_pdf(text: str) -> bytes:
         )
     )
 
-    story.append(
-        Paragraph(
-            "Professional Meeting Notes",
-            subtitle_style,
+    if title:
+        story.append(
+            Paragraph(
+                escape(title),
+                ParagraphStyle(
+                    "MeetingName",
+                    parent=styles["Heading1"],
+                    fontSize=18,
+                    leading=22,
+                    spaceAfter=10,
+                ),
+            )
         )
-    )
+
+    metadata = []
+
+    if date:
+        try:
+            from datetime import datetime
+
+            parsed_date = datetime.strptime(date, "%Y-%m-%d")
+            formatted_date = (
+                f"{parsed_date.strftime('%B')} {parsed_date.day}, {parsed_date.year}"
+            )
+        except ValueError:
+            formatted_date = date
+
+        metadata.append(f"<b>Date:</b> {escape(formatted_date)}")
+
+    if project:
+        metadata.append(f"<b>Project / Team:</b> {escape(project)}")
+
+    if participants:
+        metadata.append(f"<b>Participants:</b> {escape(participants)}")
+
+    for item in metadata:
+        story.append(
+            Paragraph(
+                item,
+                body_style,
+            )
+        )
+
+    if metadata:
+        story.append(Spacer(1, 0.15 * inch))
 
     current_section = None
 

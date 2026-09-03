@@ -55,6 +55,10 @@ export function TranscriptionResults({
   isOriginalExpanded,
   onCopy,
   onToggleOriginalExpanded,
+  meetingTitle,
+  meetingDate,
+  participants,
+  project,
 }: TranscriptionResultsProps) {
   const handleExportPDF = async () => {
     if (!cleanedText) return;
@@ -67,6 +71,10 @@ export function TranscriptionResults({
         },
         body: JSON.stringify({
           text: cleanedText,
+          title: meetingTitle,
+          date: meetingDate,
+          participants,
+          project,
         }),
       });
 

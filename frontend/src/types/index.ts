@@ -69,6 +69,10 @@ export interface TranscriptionResultsProps {
   isOriginalExpanded: boolean;
   onCopy: (text: string) => void;
   onToggleOriginalExpanded: () => void;
+  meetingTitle: string;
+  meetingDate: string;
+  participants: string;
+  project: string;
 }
 
 export interface ErrorMessageProps {

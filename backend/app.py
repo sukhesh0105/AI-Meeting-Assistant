@@ -23,6 +23,10 @@ class CleanRequest(BaseModel):
 
 class PDFRequest(BaseModel):
     text: str
+    title: str = ""
+    date: str = ""
+    participants: str = ""
+    project: str = ""
 
 
 service = None
@@ -130,7 +134,13 @@ async def clean_text(request: CleanRequest):
 @app.post("/api/export-pdf")
 async def export_pdf(request: PDFRequest):
     try:
-        pdf = generate_meeting_pdf(request.text)
+        pdf = generate_meeting_pdf(
+            text=request.text,
+            title=request.title,
+            date=request.date,
+            participants=request.participants,
+            project=request.project,
+        )
 
         return Response(
             content=pdf,

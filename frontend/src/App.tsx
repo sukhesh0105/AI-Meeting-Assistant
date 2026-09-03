@@ -6,6 +6,7 @@ import { RecordButton } from './components/RecordButton';
 import { UploadZone } from './components/UploadZone';
 import { TextInputZone } from './components/TextInputZone';
 import { SettingsPanel } from './components/SettingsPanel';
+import { MeetingMetadata } from './components/MeetingMetadata';
 import { TranscriptionResults } from './components/TranscriptionResults';
 import { ErrorMessage } from './components/ErrorMessage';
 import { Footer } from './components/Footer';
@@ -33,6 +34,12 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [rawText, setRawText] = useState<string | null>(null);
   const [cleanedText, setCleanedText] = useState<string | null>(null);
+  const [meetingTitle, setMeetingTitle] = useState('');
+  const [meetingDate, setMeetingDate] = useState(
+    new Date().toISOString().split('T')[0] ?? ''
+  );
+  const [participants, setParticipants] = useState('');
+  const [project, setProject] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [useLLM, setUseLLM] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
@@ -330,6 +337,17 @@ function App() {
         >
           {/* Left Panel */}
           <div className={styles.leftPanel}>
+            <MeetingMetadata
+              title={meetingTitle}
+              date={meetingDate}
+              participants={participants}
+              project={project}
+              onTitleChange={setMeetingTitle}
+              onDateChange={setMeetingDate}
+              onParticipantsChange={setParticipants}
+              onProjectChange={setProject}
+            />
+
             <Box>
               <RecordButton
                 isRecording={isRecording}
@@ -383,6 +401,10 @@ function App() {
               onToggleOriginalExpanded={() =>
                 setIsOriginalExpanded(!isOriginalExpanded)
               }
+              meetingTitle={meetingTitle}
+              meetingDate={meetingDate}
+              participants={participants}
+              project={project}
             />
           </div>
         </div>
