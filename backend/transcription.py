@@ -23,7 +23,7 @@ class TranscriptionService:
         print(f"🔄 Loading Whisper model '{whisper_model}'...")
         self.whisper = WhisperModel(
             whisper_model,
-            device="auto",  # Auto-detect: Metal (Mac), CUDA (NVIDIA), or CPU
+            device="cpu",  # Auto-detect: Metal (Mac), CUDA (NVIDIA), or CPU
             compute_type="int8",
         )
         print(f"✅ Whisper model '{whisper_model}' loaded!")

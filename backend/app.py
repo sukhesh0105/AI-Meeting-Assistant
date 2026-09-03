@@ -10,12 +10,19 @@ from pydantic import BaseModel
 
 from transcription import TranscriptionService
 
+from fastapi.responses import Response
+from pdf_generator import generate_meeting_pdf
+
 load_dotenv()
 
 
 class CleanRequest(BaseModel):
     text: str
     system_prompt: str | None = None
+
+
+class PDFRequest(BaseModel):
+    text: str
 
 
 service = None
@@ -118,3 +125,18 @@ async def clean_text(request: CleanRequest):
             status_code=502,
             detail="LLM cleaning failed. Check the backend terminal for details.",
         ) from e
+
+
+@app.post("/api/export-pdf")
+async def export_pdf(request: PDFRequest):
+    try:
+        pdf = generate_meeting_pdf(request.text)
+
+        return Response(
+            content=pdf,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=meeting_notes.pdf"},
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
